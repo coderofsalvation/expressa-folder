@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/coderofsalvation/expressa-init-collection#readme",
   "dependencies": {
+    "debug": "^2.6.3",
     "folder-router": "^1.0.4",
     "lodash": "^4.17.4"
   }

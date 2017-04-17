@@ -1,5 +1,6 @@
 var fs = require('fs')
 var  _ = require('lodash')
+var debug = require('debug')('expressa-folder')
 
 module.exports = (expressa, app) => {
 
@@ -7,8 +8,7 @@ module.exports = (expressa, app) => {
 
 	var addFunctions = function(obj, functions){
 		Object.assign(obj, functions)
-		for( var i in obj )
-			if( typeof obj[i] == "function" ) obj[i] = obj[i].bind(this)
+		for( var i in functions ) obj[i] = functions[i].bind(obj)
 	}
 
 	var addExtendFunctionArray = function(functions, original, query){
@@ -39,7 +39,7 @@ module.exports = (expressa, app) => {
 			var path = expressa.folderDir+'/'+name+"/"+method+'.js'
 			var exists = fs.existsSync(path)
 			if( exists ){
-				console.log("requiring express  REST-listener: "+name+"/"+method+".js")
+				debug("requiring express  REST-listener: "+name+"/"+method+".js")
 				expressa[method]('/'+name, require(path)(expressa, app) )
 			}
 		})
@@ -65,12 +65,12 @@ module.exports = (expressa, app) => {
 					case "schema":
 						var method = file == "schema" ?  "get" : file
 					  var url = "/"+name
-						console.log("requiring expressa REST-listener: "+name+"/"+file+".js")
+						debug("requiring expressa REST-listener: "+name+"/"+file+".js")
 						expressa.initListenerFile( method, url,  path )
 						break;
 
 					case "functions":
-						console.log("requiring expressa   db-extender: "+name+"/"+file+".js")
+						debug("requiring expressa   db-extender: "+name+"/"+file+".js")
 						// add database functions to objects retrieved from db
 						var functions = require( path )(expressa, app)
 
@@ -96,8 +96,10 @@ module.exports = (expressa, app) => {
 		expressa.addListener( method, 101, function(req, collection, doc){
 			var middleware = require( file )(expressa,app)
 			return new Promise( function(resolve, reject){
-				if( req.url.replace(/\?.*/, '') == url )
+				if( req.url.replace(/\?.*/, '') == url ){
+					debug(file)	
 					return middleware(req, collection, doc, resolve, reject)
+				}
 				resolve()
 			})
 		})
