@@ -4,7 +4,7 @@ file-based design-pattern to organize expressa & express REST/db middleware
 
 ## Usage
 
-		require('expressa-init-folder')(expressa, app)
+		require('expressa-folder')(expressa, app)
 		expressa.folderDir = __dirname+"/lib"
 		expressa.initFolder('foo')      // will require expressa db/REST-listener code if collection exist
 		expressa.initFolder('foo/bar')  // will setup custom express point
