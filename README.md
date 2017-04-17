@@ -7,20 +7,20 @@ file-based design-pattern to organize expressa & express REST/db middleware
 		require('expressa-folder')(expressa, app)
 		expressa.addListener('ready', 100, >(){
 			expressa.folderDir = __dirname+"/lib"
-			expressa.initFolder('foo')      // will require expressa db/REST-listener code if collection exist
+			expressa.initFolder('foo')      // will require expressa db/REST-listener code if collection 'foo' exist
 			expressa.initFolder('foo/bar')  // will setup custom express point
 		})
 
 This will automatically fetch the following files if present:
 
-| file                 | executed after database request | executed during REST request | expressa listener | creates express endpoint | note                                        |
-| -                    | -                               | -                            | -                 | -                        | -                                           |
-| lib/foo/get.js       | no                              | yes                          | yes               | no                       |                                             |
-| lib/foo/put.js       | no                              | yes                          | yes               | no                       |                                             |
-| lib/foo/delete.js    | no                              | yes                          | yes               | no                       |                                             |
-| lib/foo/schema.js    | no                              | yes                          | yes               | no                       |                                             |
-| lib/foo/functions.js | yes                             | yes                          | no                | no                       | all db objects will inherit these functions |
-| lib/foo/bar/get.js   | no                              | yes                          | no                | yes                      | |
+| file                 | expressa listener | creates express endpoint | note                                        |
+| -                    | -                 | -                        | -                                           |
+| lib/foo/get.js       | yes               | no                       | requires data/collection/foo.js to exist    |
+| lib/foo/put.js       | yes               | no                       | requires data/collection/foo.js to exist    |
+| lib/foo/delete.js    | yes               | no                       | requires data/collection/foo.js to exist    |
+| lib/foo/schema.js    | yes               | no                       | requires data/collection/foo.js to exist    |
+| lib/foo/functions.js | no                | no                       | all db objects will inherit these functions |
+| lib/foo/bar/get.js   | no                | yes                      | |
 
 ## Example: lib/foo/get.js
 
