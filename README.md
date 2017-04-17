@@ -4,7 +4,7 @@ file-based convention to decorate expressa REST/db-results with functions & midd
 
 ## Usage
 
-	  require('expressa-init-collection')(expressa, app)
+		require('expressa-init-collection')(expressa, app)
 		expressa.collectionDir = __dirname+"/lib"
 		expressa.initCollection('foo')
 
