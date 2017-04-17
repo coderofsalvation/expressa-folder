@@ -40,7 +40,7 @@ module.exports = (expressa, app) => {
 			var exists = fs.existsSync(path)
 			if( exists ){
 				console.log("requiring express  REST-listener: "+name+"/"+method+".js")
-				app[method]('/'+name, require(path))
+				app[method]('/'+name, require(path)(expressa, app) )
 			}
 		})
 	}
@@ -70,7 +70,7 @@ module.exports = (expressa, app) => {
 						break;
 
 					case "functions":
-						console.log("requiring expressa   db-listener: "+name+"/"+file+".js")
+						console.log("requiring expressa   db-extender: "+name+"/"+file+".js")
 						// add database functions to objects retrieved from db
 						var functions = require( path )(expressa, app)
 

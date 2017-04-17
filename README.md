@@ -51,8 +51,10 @@ Now you can easily access helper functions on the server:
 
 ## Example: lib/foo/bar/get.js
 
-		module.exports = function(req, res, next){
-			res.end("foo")
+		module.exports = function(expressa,app){
+			return function(req, res, next){
+				res.end("foo")
+			}
 		}
 
 Voila..this will automatically setup a 'foo/bar' express-endpoint
