@@ -40,7 +40,7 @@ module.exports = (expressa, app) => {
 			var exists = fs.existsSync(path)
 			if( exists ){
 				console.log("requiring express  REST-listener: "+name+"/"+method+".js")
-				app[method]('/'+name, require(path)(expressa, app) )
+				expressa[method]('/'+name, require(path)(expressa, app) )
 			}
 		})
 	}
