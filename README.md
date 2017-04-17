@@ -1,12 +1,13 @@
-file-based convention to decorate expressa REST/db-results with functions & middleware 
+file-based design-pattern to organize expressa & express REST/db middleware 
 
 ![Build Status](https://travis-ci.org/--repurl=git@github.com:coderofsalvation/expressa-init-collection..svg?branch=master)
 
 ## Usage
 
-		require('expressa-init-collection')(expressa, app)
-		expressa.collectionDir = __dirname+"/lib"
-		expressa.initCollection('foo')
+		require('expressa-init-folder')(expressa, app)
+		expressa.folderDir = __dirname+"/lib"
+		expressa.initFolder('foo')      // will require expressa db/REST-listener code if collection exist
+		expressa.initFolder('foo/bar')  // will setup custom express point
 
 This will automatically fetch the following files if present:
 
@@ -23,7 +24,6 @@ This will automatically fetch the following files if present:
 
 
 		module.exports = function(expressa, app){
-
 			return function(req, collection, doc, resolve, reject) {
 				// do stuff with the response data (doc)
 				resolve(doc)
@@ -33,13 +33,11 @@ This will automatically fetch the following files if present:
 ## Example: lib/foo/functions.js
 
 		module.exports = function(expressa, app){
-
 			return {
 				addPropertyFoo: () => {
 					this.foo = "bar"
 				}
 			}
-
 		}
 
 Now you can easily access helper functions on the server:
@@ -48,3 +46,11 @@ Now you can easily access helper functions on the server:
 		.then( function(items){
 			items.map( (i) => i.addPropertyFoo() )
 		})
+
+## Example: lib/foo/bar/get.js
+
+		module.exports = function(req, res, next){
+			res.end("foo")
+		}
+
+Voila..this will automatically setup a 'foo/bar' express-endpoint

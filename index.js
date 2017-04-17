@@ -3,12 +3,7 @@ var  _ = require('lodash')
 
 module.exports = (expressa, app) => {
 
-	expressa.collectionDir = false	
-
-	expressa.initCollection = (name) =>  {
-		if( !expressa.collectionDir ) throw 'please set expressa.collectionDir first, see docs of expressa-init-collection'
-		expressa.initListeners(name)
-	}
+	expressa.folderDir = false	
 
 	var addFunctions = function(obj, functions){
 		Object.assign(obj, functions)
@@ -38,10 +33,28 @@ module.exports = (expressa, app) => {
 		})
 	}
 
+	var initEndpoint = function(name){
+		var files = ["get", "put", "post", "delete"]
+		files.map( (method) => {
+			var path = expressa.folderDir+'/'+name+"/"+method+'.js'
+			var exists = fs.existsSync(path)
+			if( exists ){
+				console.log("requiring express  REST-listener: "+name+"/"+method+".js")
+				app[method]('/'+name, require(path))
+			}
+		})
+	}
+
+	expressa.initFolder = (name) =>  {
+		if( !expressa.folderDir ) throw 'please set expressa.folderDir first, see docs of expressa-init-folder'
+		if( expressa.db[name] ) expressa.initListeners(name)
+		else initEndpoint(name)
+	}
+
 	expressa.initListeners = (name) => {	
 		var files = ["functions", "get", "put", "post", "delete", "schema"]
 		files.map( (file) => {
-			var path = expressa.collectionDir+'/'+name+"/"+file+'.js'
+			var path = expressa.folderDir+'/'+name+"/"+file+'.js'
 			var exists = fs.existsSync(path)
 			if( exists ){
 				switch( file ){

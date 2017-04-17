@@ -14,6 +14,10 @@ var returnObjectPromise = function(){
 	})
 }
 
+var app = {
+	get: t.spy(function(){})
+}
+
 var expressa = {
 	addListener: t.spy(function(){}), 
 	db: {
@@ -27,9 +31,9 @@ var expressa = {
 }
 
 t.test("init", function(next, error){
-	var ec = require('./../../')(expressa, {})
-	expressa.collectionDir = __dirname+"/../lib"
-	expressa.initCollection('foo')
+	var ec = require('./../../')(expressa, app)
+	expressa.folderDir = __dirname+"/../lib"
+	expressa.initFolder('foo')
 	next()
 })
 
@@ -61,5 +65,12 @@ t.test("foo update", function(next, error){
 	})
 
 })
+
+t.test("init expressa endpoint", function(next, error){
+	expressa.initFolder('foo/bar')
+	if( !app.get.called ) error("app.get not called")
+	next()
+})
+
 
 t.run()
