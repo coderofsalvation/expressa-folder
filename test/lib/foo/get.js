@@ -4,5 +4,5 @@ module.exports = function(expressa, app){
 		if (collection == 'foo') {
 			resolve({foo:"bar"})
 		}
-	})
+	}
 }
