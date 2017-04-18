@@ -1,5 +1,5 @@
 {
-  "name": "expressa-init-collection",
+  "name": "expressa-folder",
   "version": "1.0.1",
   "description": "file-based design-pattern to organize expressa & express REST/db middleware", 
   "main": "index.js",
