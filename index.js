@@ -65,6 +65,7 @@ module.exports = (expressa, app) => {
 					case "schema":
 						var method = file == "schema" ?  "get" : file
 					  var url = "/"+name
+						if( file == "schema" ) url += "/schema"
 						debug("requiring expressa REST-listener: "+name+"/"+file+".js")
 						expressa.initListenerFile( method, url,  path )
 						break;
