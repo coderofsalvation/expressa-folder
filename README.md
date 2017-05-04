@@ -53,7 +53,8 @@ Now you can easily access helper functions on the server:
 
     module.exports = function(expressa,app){
       return function(req, res, next){
-        res.end("foo")
+				res.writeHeader(200, {"Content-Type":"application/json"})
+				res.end( JSON.stringify({"foo":"bar"}) )
       }
     }
 
