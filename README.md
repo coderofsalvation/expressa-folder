@@ -59,3 +59,77 @@ Now you can easily access helper functions on the server:
     }
 
 Voila..this will automatically setup a 'foo/bar' express-endpoint
+
+## Example: robust custom endpoint
+
+> NOTE: The non-expressa endpoint above, is a simple express endpoint.
+> Unfortunately express endpoints have zero input validation (unlike expressa endpoints).
+
+Here's how to do it for express as well..let assume we want the user to submit to a mailinglist:
+
+    // lets add the endpoint
+    expressa.initFolder('users/mailinglist')
+
+And now lets write `lib/users/post.js`:
+
+    var typeshave = require('typeshave') // json schema validator
+    var typesafe  = typeshave.typesafe
+
+    var schema = require('./../../../../data/collection/users.json').schema
+    schema.required = ["firstname", "email"] // overrule required properties 
+
+    module.exports = function(expressa, app ){
+
+      return function(req, res, next){
+
+        res.writeHeader(200, {"Content-Type":"application/json"})
+
+        try{ 
+
+          typesafe(schema, function(){
+
+            expressa.db.users.find({email:req.body.email})
+            .then( function(user){
+              if(user.length != 0) throw "user "+req.body.email+" already exist"
+              return expressa.db.users.create( req.body )
+            })
+            .then(function(id){
+              res.end( JSON.stringify({code:0, id:id}) )
+            })
+            .catch(function(err){
+              res.end( JSON.stringify({"code":1, error:err}) )
+            })
+
+          })(req.body) 
+
+        }catch(e){
+          return res.end( JSON.stringify({"code":2, error:e}) )
+        }
+
+      }
+    }
+
+Boom...if we would now post `{}` to our endpoint:
+
+    $ curl -X POST 'http://localhost:3001/api/users/mailinglist' --data '{}'
+
+Then the server will reply:
+
+    { data: {},
+      errors:
+       { message: 'Missing required property: email',
+         dataPath: '',
+         schemaPath: '/required/0',
+         subErrors: null },
+      schema:
+       { type: 'object',
+         additionalProperties: false,
+         properties:
+          { meta: [Object],
+            email: [Object],
+            password: [Object],
+            firstname: [Object],
+            lastname: [Object],
+            roles: [Object] }
+         required: [ 'email', 'firstname' ],
+
