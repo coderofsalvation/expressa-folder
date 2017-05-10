@@ -11,9 +11,9 @@ module.exports = (expressa, app) => {
 		for( var i in functions ) obj[i] = functions[i].bind(obj)
 	}
 
-	var addExtendFunctionArray = function(functions, original, query){
+	var addExtendFunctionArray = function(functions, original, a, b, c, d, e, f, g){
 		return new Promise( function(resolve, reject){
-			original(query)
+			original(a, b, c, d, e, f, g)
 			.then( function(result) {
 				if( result ) result.map( (r) => addFunctions(r, functions) )
 				resolve(result)

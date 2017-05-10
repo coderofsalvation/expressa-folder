@@ -20,7 +20,7 @@ This will automatically fetch the following files if present:
 | lib/foo/delete.js    | yes               | no                       | requires data/collection/foo.js to exist    |
 | lib/foo/schema.js    | yes               | no                       | requires data/collection/foo.js to exist    |
 | lib/foo/functions.js | no                | no                       | all db objects will inherit these functions |
-| lib/foo/bar/get.js   | no                | yes                      | |
+| lib/foo/bar/get.js   | no                | yes                      | bare express endpoint without expressa schema-validation|
 
 ## Example: lib/foo/get.js
 
@@ -49,7 +49,7 @@ Now you can easily access helper functions on the server:
       items.map( (i) => i.addPropertyFoo() )
     })
 
-## Example: lib/foo/bar/get.js
+## Example: lib/foo/bar/get.js (bare express)
 
     module.exports = function(expressa,app){
       return function(req, res, next){
@@ -70,13 +70,13 @@ Here's how to do it for express as well..let assume we want the user to submit t
     // lets add the endpoint
     expressa.initFolder('users/mailinglist')
 
-And now lets write `lib/users/post.js`:
+And now lets write `lib/users/mailinglist/post.js`:
 
     var typeshave = require('typeshave') // json schema validator
     var typesafe  = typeshave.typesafe
 
     var schema = require('./../../../../data/collection/users.json').schema
-    schema.required = ["firstname", "email"] // overrule required properties 
+    schema.required = ["firstname", "email"] // overrule required properties
 
     module.exports = function(expressa, app ){
 
