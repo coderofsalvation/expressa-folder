@@ -12,8 +12,9 @@ module.exports = (expressa, app) => {
 	}
 
 	var addExtendFunctionArray = function(functions, original, a, b, c, d, e, f, g){
+		var args = Array.prototype.slice.call(arguments,[2])
 		return new Promise( function(resolve, reject){
-			original(a, b, c, d, e, f, g)
+			original.apply(this, args)
 			.then( function(result) {
 				if( result ) result.map( (r) => addFunctions(r, functions) )
 				resolve(result)
@@ -23,8 +24,9 @@ module.exports = (expressa, app) => {
 	}
 
 	var addExtendFunctionObject = function(functions, original, id){
+		var args = Array.prototype.slice.call(arguments,[2])
 		return new Promise( function(resolve, reject){
-			original(id)
+			original.apply(this, args)
 			.then( function(r) {
 				if( r ) addFunctions(r, functions)
 				resolve(r)
@@ -83,8 +85,9 @@ module.exports = (expressa, app) => {
 							dbfunction.get  = _.wrap( dbfunction.get,  addExtendFunctionObject.bind(dbfunction, functions) )
 							// make sure we remove functions from object before updating them in the db 
 							_.wrap( dbfunction.update,  function(original, id, obj){
+								var args = Array.prototype.slice.call(arguments,[1])
 								obj = JSON.parse( JSON.stringify(obj) ) // strip functions
-								return original(id, obj)
+								return original.apply(this, args)
 							})
 						}
 						break;
