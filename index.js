@@ -11,7 +11,7 @@ module.exports = (expressa, app) => {
 		for( var i in functions ) obj[i] = functions[i].bind(obj)
 	}
 
-	var addExtendFunctionArray = function(functions, original, a, b, c, d, e, f, g){
+	var addExtendFunctionArray = function(functions, original){
 		var args = Array.prototype.slice.call(arguments,[2])
 		return new Promise( function(resolve, reject){
 			original.apply(this, args)
