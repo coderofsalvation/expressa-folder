@@ -43,11 +43,6 @@ module.exports = (expressa, app) => {
 			if( exists ){
 				debug("requiring express  REST-listener: "+name+"/"+method+".js")
 				expressa[method]('/'+name, require(path)(expressa, app) )
-
-        // fix to not let collection-regexes take over
-        if( method == "get" ){ 
-          expressa.stack.splice(4,0, expressa.stack.pop(),'two'); 
-        }
 			}
 		})
 	}
@@ -58,18 +53,20 @@ module.exports = (expressa, app) => {
 		var exists = fs.existsSync(swaggerFile)
 		if( exists ){
 			debug("requiring express  SWAGGER-config: "+name+"/swagger.js")
-			var swagger = require(swaggerFile)
-			for( var endpoint in swagger )
-				for( var method in swagger[endpoint] )
-					expressa.swagger.addEndpoint(method, endpoint, swagger[endpoint][method] )
+			try{
+				var swagger = require(swaggerFile)
+				for( var endpoint in swagger )
+					for( var method in swagger[endpoint] )
+						expressa.swagger.addEndpoint(method, endpoint, swagger[endpoint][method] )
+			}catch(e){ console.error(e) }
 		}
 	}
 
 	expressa.initFolder = (name) =>  {
 		if( !expressa.folderDir ) throw 'please set expressa.folderDir first, see docs of expressa-init-folder'
-		initSwagger( name )
 		if( expressa.db[name] ) expressa.initListeners(name)
 		else initEndpoint(name)
+		initSwagger( name )
 	}
 
 	expressa.initListeners = (name) => {	
