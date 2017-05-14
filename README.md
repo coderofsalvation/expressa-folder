@@ -16,15 +16,18 @@ This will automatically fetch the following files if present:
 | file                 | expressa listener | creates express endpoint | note                                        |
 | -                    | -                 | -                        | -                                           |
 | lib/foo/get.js       | yes               | no                       | requires data/collection/foo.js to exist    |
+| lib/foo/post.js      | yes               | no                       | requires data/collection/foo.js to exist    |
 | lib/foo/put.js       | yes               | no                       | requires data/collection/foo.js to exist    |
 | lib/foo/delete.js    | yes               | no                       | requires data/collection/foo.js to exist    |
 | lib/foo/schema.js    | yes               | no                       | requires data/collection/foo.js to exist    |
 | lib/foo/functions.js | no                | no                       | all db objects will inherit these functions |
+| lib/foo/swagger.js   | no                | no                       | only when [expressa-swagger](https://npmjs.org/package/expressa-swagger) is installed |
 | lib/foo/bar/get.js   | no                | yes                      | bare express endpoint without expressa schema-validation|
+| lib/foo/bar/swagger.js   | no                | no                       | only when [expressa-swagger](https://npmjs.org/package/expressa-swagger) is installed |
 
 ## Example: lib/foo/get.js
 
-
+G
     module.exports = function(expressa, app){
       return function(req, collection, doc, resolve, reject) {
         // do stuff with the response data (doc)
@@ -133,3 +136,36 @@ Then the server will reply:
             roles: [Object] }
          required: [ 'email', 'firstname' ],
 
+
+## Example: lib/foo/swagger.js
+
+This will add (or overwrite) swagger documentation, generated at url `/api/doc` using [expressa-admin](https://npmjs.org/package/expressa-swagger):
+
+    module.exports = {
+      "/foo":{
+        "get":{
+          "parameters": [
+            {
+              "in": "body",
+              "name": "payload",
+              "description": "", 
+              "required": true,
+              "schema": {
+                "type": "object",
+                "required":["id_user"],                  // see swagger
+                "properties": {                          // documentation
+                  "id_user":{
+                    "required":true, 
+                    "type":"string",
+                    "default":"lLK34LK" 
+                  }
+                }
+              }
+            }    
+          ],
+          "responses": { },
+          "tags": [ "users" ],
+          "summary": "Lorem ipsum"
+        }
+      }
+    }

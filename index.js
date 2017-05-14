@@ -52,8 +52,22 @@ module.exports = (expressa, app) => {
 		})
 	}
 
+	var initSwagger = function(name){
+		if( !expressa.swagger ) return
+		var swaggerFile = expressa.folderDir+'/'+name+'/swagger.js'
+		var exists = fs.existsSync(swaggerFile)
+		if( exists ){
+			debug("requiring express  SWAGGER-config: "+name+"/swagger.js")
+			var swagger = require(swaggerFile)
+			for( var endpoint in swagger )
+				for( var method in swagger[endpoint] )
+					expressa.swagger.addEndpoint(method, endpoint, swagger[endpoint][method] )
+		}
+	}
+
 	expressa.initFolder = (name) =>  {
 		if( !expressa.folderDir ) throw 'please set expressa.folderDir first, see docs of expressa-init-folder'
+		initSwagger( name )
 		if( expressa.db[name] ) expressa.initListeners(name)
 		else initEndpoint(name)
 	}
