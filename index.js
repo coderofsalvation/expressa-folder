@@ -117,7 +117,8 @@ module.exports = (expressa, app) => {
 		expressa.addListener( method, 101, function(req, collection, doc){
 			var middleware = require( file )(expressa,app)
 			return new Promise( function(resolve, reject){
-				if( req.url.replace(/\?.*/, '') == url ){
+				var baseurl = "/"+req.url.split("/")[1]
+				if( req.url.replace(/\?.*/, '') == url || baseurl == url){
 					debug(file)	
 					return middleware(req, collection, doc, resolve, reject)
 				}
