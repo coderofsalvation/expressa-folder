@@ -43,6 +43,10 @@ module.exports = (expressa, app) => {
 			if( exists ){
 				debug("requiring express  REST-listener: "+name+"/"+method+".js")
 				expressa[method]('/'+name, require(path)(expressa, app) )
+				// fix to not let collection-regexes take over
+				if( method == "get" ){ 
+				  expressa.stack.splice(5,0, expressa.stack.pop(),'two'); 
+				}
 			}
 		})
 	}
