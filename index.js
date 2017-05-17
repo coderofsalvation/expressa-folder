@@ -118,17 +118,19 @@ module.exports = (expressa, app) => {
 	}
 
   expressa.initListenerFile = function(method, url,  file) {
-		expressa.addListener( method, 101, function(req, collection, doc){
-			var middleware = require( file )(expressa,app)
-			return new Promise( function(resolve, reject){
-				var baseurl = "/"+req.url.split("/")[1]
-				if( req.url.replace(/\?.*/, '') == url || baseurl == url){
-					debug(file)	
-					return middleware(req, collection, doc, resolve, reject)
-				}
-				resolve()
-			})
-		})
-  }	
+    expressa.addListener( method, 101, function(req, collection, doc){
+      var middleware = require( file )(expressa,app)
+      return new Promise( function(resolve, reject){   
+        var parts = req.url.split("/")
+        var baseurl = "/"+parts[1]
+        var id = parts[2] || ""            
+        if( req.url.replace(/\?.*/, '') == url || (baseurl == url && id != "schema" ) ){
+          debug(file)           
+          return middleware(req, collection, doc, resolve, reject)
+        }                
+        resolve()                                                   
+      })                     
+    })        
+  }           
 
 }
