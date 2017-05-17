@@ -127,8 +127,7 @@ module.exports = (expressa, app) => {
         if( req.url.replace(/\?.*/, '') == url || (baseurl == url && id != "schema" ) ){
           debug(file)           
           return middleware(req, collection, doc, resolve, reject)
-        }                
-        resolve()                                                   
+        }else resolve()                                                   
       })                     
     })        
   }           
