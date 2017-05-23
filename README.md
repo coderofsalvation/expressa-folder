@@ -27,7 +27,7 @@ This will automatically fetch the following files if present:
 
 ## Example: lib/foo/get.js
 
-G
+
     module.exports = function(expressa, app){
       return function(req, collection, doc, resolve, reject) {
         // do stuff with the response data (doc)
