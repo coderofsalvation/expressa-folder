@@ -9,6 +9,8 @@ file-based design-pattern to organize expressa & express REST/db middleware
       expressa.folderDir = __dirname+"/lib"
       expressa.initFolder('foo')      // will require expressa db/REST-listener code if collection 'foo' exist
       expressa.initFolder('foo/bar')  // will setup custom express point
+      // optional: generate REST client for in the browser at /api/client.js
+      require('expressa-client').middleware({expressa:expressa,  app:app}) 
     })
 
 This will automatically fetch the following files if present:

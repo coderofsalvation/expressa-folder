@@ -4,6 +4,7 @@ var debug = require('debug')('expressa-folder')
 
 module.exports = (expressa, app) => {
 
+	expressa.customEndpoints = []
 	expressa.folderDir = false	
 
 	var addFunctions = function(obj, functions){
@@ -36,6 +37,7 @@ module.exports = (expressa, app) => {
 	}
 
 	var initEndpoint = function(name){
+		expressa.customEndpoints.push(name)
 		var files = ["get", "put", "post", "delete"]
 		files.map( (method) => {
 			var path = expressa.folderDir+'/'+name+"/"+method+'.js'

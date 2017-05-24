@@ -1,6 +1,6 @@
 {
   "name": "expressa-folder",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "file-based design-pattern to organize expressa & express REST/db middleware", 
   "main": "index.js",
   "directories": {
