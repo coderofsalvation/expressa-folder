@@ -106,7 +106,7 @@ module.exports = (expressa, app) => {
 							dbfunction.all  = _.wrap( dbfunction.all,  addExtendFunctionArray.bind(dbfunction, functions) )
 							dbfunction.get  = _.wrap( dbfunction.get,  addExtendFunctionObject.bind(dbfunction, functions) )
 							// make sure we remove functions from object before updating them in the db 
-							_.wrap( dbfunction.update,  function(original, id, obj){
+							dbfunction.update = _.wrap( dbfunction.update,  function(original, id, obj){
 								var args = Array.prototype.slice.call(arguments,[1])
 								obj = JSON.parse( JSON.stringify(obj) ) // strip functions
 								return original.apply(this, args)
