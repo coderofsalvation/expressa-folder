@@ -101,7 +101,7 @@ module.exports = (expressa, app) => {
 
 						// wrap expressa's db functions in order to decorate db-objects with functions
 						var dbfunction = expressa.db[name]
-						if( dbfunction ){
+						if( dbfunction && dbfunction.wrappedExpressaFolder == undefined){
 							dbfunction.find = _.wrap( dbfunction.find, addExtendFunctionArray.bind(dbfunction, functions) )
 							dbfunction.all  = _.wrap( dbfunction.all,  addExtendFunctionArray.bind(dbfunction, functions) )
 							dbfunction.get  = _.wrap( dbfunction.get,  addExtendFunctionObject.bind(dbfunction, functions) )
@@ -109,8 +109,10 @@ module.exports = (expressa, app) => {
 							dbfunction.update = _.wrap( dbfunction.update,  function(original, id, obj){
 								var args = Array.prototype.slice.call(arguments,[1])
 								obj = JSON.parse( JSON.stringify(obj) ) // strip functions
+								console.dir({id:obj._id, name:obj.name})
 								return original.apply(this, args)
 							})
+							dbfunction.wrappedExpressaFolder = true
 						}
 						break;
 
