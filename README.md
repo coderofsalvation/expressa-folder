@@ -138,6 +138,24 @@ Then the server will reply:
             roles: [Object] }
          required: [ 'email', 'firstname' ],
 
+## Authentication / permissions
+
+For expressa endpoints the user+permissions are already available at `req.user` and `req.user.roles`.
+For ad-hoc express endpoints you can do this:
+
+           var auth = require('expressa/auth')
+	   var _    = require('lodash')
+
+	   return function(req, res, next){                                                        
+		  var rolePermissions = require('expressa/role_permissions')(expressa).middleware;    
+		  auth.middleware(req, res, function(){
+		      rolePermissions(req, res, function(){
+			  var admin = ( _.get( req,'user.roles' ) || [] ).indexOf("Admin") // is admin?
+			  res.writeHeader(200, {"Content-Type":"application/json"})                   
+			  res.end( admin ? JSON.stringify(lines) : JSON.stringify({error:"access denied"}) )             
+		      })
+		  })
+	      }     
 
 ## Example: lib/foo/swagger.js
 
